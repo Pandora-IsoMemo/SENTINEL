@@ -19,7 +19,7 @@ if (Sys.info()[['user']] == 'shiny'){
 } else if (Sys.info()[['user']] == 'rstudio-connect'){
   
   # Running on remote server
-  Sys.setenv(PYTHON_PATH = '/opt/python/3.7.7/bin/python3')
+  Sys.setenv(PYTHON_PATH = 'C:/Program Files/WindowsApp/PythonSoftwareFoundation.Python.3.10_3.10.3056.0_x64_qbz5n2kfra8p0/python3.10.exe') #/opt/python/3.7.7/bin/python3, C:/Users/jroachell/Documents/.virtualenvs/r-reticulate/Scripts/
   Sys.setenv(VIRTUALENV_NAME = paste0(VIRTUALENV_NAME, '/')) # include '/' => installs into rstudio-connect/apps/
   Sys.setenv(RETICULATE_PYTHON = paste0(VIRTUALENV_NAME, '/bin/python'))
   
