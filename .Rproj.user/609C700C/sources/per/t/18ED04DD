@@ -1,0 +1,26 @@
+{
+    "id": "18ED04DD",
+    "path": "~/Documents/PROJECTS/SENTINEL/app/app.py",
+    "project_path": "app/app.py",
+    "type": "python",
+    "hash": "3162808441",
+    "contents": "",
+    "dirty": false,
+    "created": 1697165316471.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "9,20",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1697157870,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1697157870,
+    "read_only": false,
+    "read_only_alternatives": []
+}
