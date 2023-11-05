@@ -18,18 +18,18 @@ series_may, ts_may = ews_exe()
 app_ui = ui.page_fluid(
     # TTILE PANEL
     ui.panel_title("Sentinel v0.0.1"),
-    ui.markdown("""Computing predictions of a DL classifier:
-The method `apply_classifier()` applies a deep learning classifier (a TensorFlow Model) to a segment of the time series data, specified using tmin and tmax. The prediction (a vector of probabilites for each class) is then saved into the attribute dl_preds, which is a pandas DataFrame.
+#     ui.markdown("""Computing predictions of a DL classifier:
+# The method `apply_classifier()` applies a deep learning classifier (a TensorFlow Model) to a segment of the time series data, specified using tmin and tmax. The prediction (a vector of probabilites for each class) is then saved into the attribute dl_preds, which is a pandas DataFrame.
 
-Let's see this in action. We will import one of the classifiers that was trained in Bury et al. (PNAS, 2021). These are saved in the ewstools Github repository under /saved_classifiers for convenience. These classifiers were trained to predict the following classes:
-> 0	fold bifurcation
+# Let's see this in action. We will import one of the classifiers that was trained in Bury et al. (PNAS, 2021). These are saved in the ewstools Github repository under /saved_classifiers for convenience. These classifiers were trained to predict the following classes:
+# > 0	fold bifurcation
 
-> 1	Hopf bifurcation
+# > 1	Hopf bifurcation
 
-> 2	transcritical bifurcation
+# > 2	transcritical bifurcation
 
-> 3	null
-"""),
+# > 3	null
+# """),
 
 
     # INPUTS
@@ -47,10 +47,11 @@ Let's see this in action. We will import one of the classifiers that was trained
     ),
 
     # OUTPUTS
+    ui.output_table("ml_preds"),
     ui.output_text_verbatim("txt"),
     ui.output_plot("plot"),
     ui.output_plot("plot2"),
-    ui.output_table("ml_preds")
+
 )
 
 def server(input, output, session):
