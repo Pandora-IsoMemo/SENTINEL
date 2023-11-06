@@ -21,8 +21,14 @@ def get_example_df():
     series_may = simulate_may(tmax=500, dt=0.01, h=[0.15,0.28]).iloc[::100]
     ts_may = ewstools.TimeSeries(series_may['x'], transition=420)
     ts_may.detrend(method='Lowess', span=0.2)
-    ts_may.state[['state','smoothing']].plot()
     return series_may, ts_may
+
+
+def transform_dat(df):
+    df = ewstools.TimeSeries(df['y'], transition=420)
+    df.detrend(method='Lowess', span=0.2)
+    return df
+
 
 def get_model(model_path, ts_may):
     classifier = load_model(model_path)
