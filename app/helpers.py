@@ -35,7 +35,7 @@ def get_model(model_path, ts_may):
     ts_may.apply_classifier(classifier, tmin=0, tmax=400)
     return ts_may.dl_preds
 
-
+# example: Roman data, climate change, critical point, given this data, is there warning signs about to have a transition.
 
 
 # UI helper
