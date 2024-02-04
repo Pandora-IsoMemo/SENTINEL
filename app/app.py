@@ -12,10 +12,13 @@ from helpers import *
 import io
 import webbrowser
 import shinyswatch
+import tensorflow
+#import output_widget, render_widget, register_widget
+
 
 series_may, ts_may = get_example_df()
 
-
+print(series_may)
 app_ui = ui.page_fluid(
 
     ui.include_css("/Users/johann/Documents/PROJECTS/SENTINEL/app/stylesheet.css"),
@@ -38,10 +41,11 @@ app_ui = ui.page_fluid(
             #ui.input_action_button("example_button", "Ex. Data", class_="btn-success"),
             # ui.panel_conditional(
             #     "input.file1",
+            ui.input_numeric("transition","Known Transition Point", value=440),
             ui.input_action_button("treat_dat", "Detrend", class_="btn-success"),
-            #                     ),
             ui.input_checkbox("header", "Header", True),
             ui.input_select("model_name", "Select Model", choices = model_names),
+            ui.input_action_button("ews_button", "Detect Tipping Signals", class_ = "btn-success"),
             ui.input_action_button("model_button", "Model", class_ = "btn-success"),
             width=4.5,
         ),
@@ -63,11 +67,15 @@ app_ui = ui.page_fluid(
             ui.output_text_verbatim("txt"),
             ui.output_plot("plot"),
             ui.output_plot("plot2"),
+            ui.panel_conditional(
+                "input.ews_button",
+                ui.markdown("""### Early Warning Signals Indicators"""),
+                ui.output_image("plot_ews"),
+            )
+
 
         ),
     ),
-
-
 
 )
 
@@ -76,6 +84,11 @@ def server(input, output, session):
     # Define a callback to open the hyperlinks when help buttons are clicked
     df = reactive.Value(pd.DataFrame()) # initiate reactive df
     df_post = reactive.Value()
+
+    # if input.file():
+    #     df.set(pd.read_csv(f[0]["datapath"], header=0 if input.header() else None))
+    #     instance = instantiate_ewstools(df.get(), input.transition_point,input.roll_window, input.ham_length)
+
     @output
     @render.ui
     def contents():
@@ -89,7 +102,7 @@ def server(input, output, session):
         elif input.treat_dat():
             f: list[FileInfo] = input.file1()
             df.set(pd.read_csv(f[0]["datapath"], header=0 if input.header() else None)) # suppose to instantiate the new file
-            df_post = transform_dat(df.get())
+            df_post = transform_dat(df.get(), input.transition())
             return ui.HTML(df_post.get().head().to_html(classes="table table-striped"))
 
     @output
@@ -114,10 +127,27 @@ def server(input, output, session):
             return df_post.get().state[['state', 'smoothing']].plot()
 
     @output
+    @render.plot
+    @reactive.event(input.ews_button, ignore_none=False)
+    def plot_ews():
+        if input.file1() is None:
+            ts_may.compute_spectrum(rolling_window=0.5, ham_length=40)
+            ts_may.compute_smax()
+            ts_may.compute_ktau()
+            ts_may.compute_skew()
+            ts_may.compute_var(rolling_window=0.5)
+            #tools = instantiate_ewstools(series_may, transition_point=422, roll_window=0.5, ham_length=40)
+            #ts = tools.detect_ews()
+            fig = ts_may.make_plotly()
+            return Image(fig.to_image())
+
+        else:
+            return "working on the input data file"
+    @output
     @render.ui
     @reactive.event(input.treat_dat, ignore_none=False)
     def treat_dat():
-        df_post.set(transform_dat(df.get()))
+        df_post.set(transform_dat(df.get(),input.transition()))
         return ui.HTML(df_post.get().state[['state', 'smoothing']].head().to_html(classes="table table-striped"))
 
     @output

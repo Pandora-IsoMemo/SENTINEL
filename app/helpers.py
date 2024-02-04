@@ -23,12 +23,27 @@ def get_example_df():
     ts_may.detrend(method='Lowess', span=0.2)
     return series_may, ts_may
 
+class instantiate_ewstools:
+    def __init__(self, df, transition_point, roll_window, ham_length):
+        self.df = df,
+        self.transition_point = transition_point,
+        self.ham_length = ham_length,
+        self.roll_window = roll_window
 
-def transform_dat(df):
-    df = ewstools.TimeSeries(df['y'], transition=420)
-    df.detrend(method='Lowess', span=0.2)
-    return df
+    def transform_dat(self):
+        self.ts = ewstools.TimeSeries(self.df['y'], transition=self.transition_point)
+        self.ts.detrend(method='Lowess', span=0.2)
+        return self.ts
 
+    def detect_ews(self):
+        #self.ts = ewstools.TimeSeries(self.df['y'], transition=self.transition_point)
+        self.df.detrend(method='Lowess', span=0.2)
+        self.df.compute_spectrum(rolling_window=self.roll_window, ham_length=self.ham_length)
+        self.ts.compute_smax()
+        self.ts.compute_ktau()
+        self.ts.compute_skew()
+        self.ts.compute_var(rolling_window=self.roll_window)
+        return self.ts
 
 def get_model(model_path, ts_may):
     classifier = load_model(model_path)
